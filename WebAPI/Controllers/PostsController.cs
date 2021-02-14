@@ -1,4 +1,5 @@
-﻿using Application.Interfaces;
+﻿using Application.Dto;
+using Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -39,6 +40,14 @@ namespace WebAPI.Controllers
             }
 
             return Ok(post);
+        }
+
+        [SwaggerOperation(Summary = "Create a new post")]
+        [HttpPost]
+        public IActionResult Create(CreatePostDto newPost)
+        {
+            var post = _postService.AddNewPost(newPost);
+            return Created($"api/posts/{post.Id}", post);
         }
     }
 }
