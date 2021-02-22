@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Data
@@ -18,7 +17,7 @@ namespace Infrastructure.Data
 
         public DbSet<Post> Posts { get; set; }
 
-        public async Task<int> SaveChangesAsync()
+        public override int SaveChanges()
         {
             var entries = ChangeTracker
                 .Entries()
@@ -34,7 +33,7 @@ namespace Infrastructure.Data
                 }
             }
 
-            return await base.SaveChangesAsync();
+            return base.SaveChanges();
         }
     }
 }

@@ -23,11 +23,12 @@ namespace WebAPI.Installers
             services.AddApplication();
             services.AddInfrastructure();
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             services.AddApiVersioning(x =>
             {
-                x.DefaultApiVersion = new ApiVersion(1, 0);
+                x.DefaultApiVersion = new ApiVersion(2, 0);
                 x.AssumeDefaultVersionWhenUnspecified = true;
                 x.ReportApiVersions = true;
             });

@@ -1,4 +1,5 @@
 ﻿using Application.Dto;
+using Application.Dto.Cosmos;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,17 +9,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WebAPI.Controllers.V1
+namespace WebAPI.Controllers.V2
 {
-    [ApiExplorerSettings(IgnoreApi = true)]
+    [ApiVersion("2.0")]
+    //[Route("api/{v:apiVersion}/[controller]")]
     [Route("api/[controller]")]
-    [ApiVersion("1.0")]
     [ApiController]
-    public class PostsController : ControllerBase
+    public class CosmosPostsController : ControllerBase
     {
-        private readonly IPostService _postService;
+        private readonly ICosmosPostService _postService;
 
-        public PostsController(IPostService postService)
+        public CosmosPostsController(ICosmosPostService postService)
         {
             _postService = postService;
         }
@@ -33,7 +34,7 @@ namespace WebAPI.Controllers.V1
 
         [SwaggerOperation(Summary = "Retrieves a specific post by unique id")]
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> Get(string id)
         {
             var post = await _postService.GetPostByIdAsync(id);
             if (post == null)
@@ -46,7 +47,7 @@ namespace WebAPI.Controllers.V1
 
         [SwaggerOperation(Summary = "Create a new post")]
         [HttpPost]
-        public async Task<IActionResult> Create(CreatePostDto newPost)
+        public async Task<IActionResult> Create(CreateCosmosPostDto newPost)
         {
             var post = await _postService.AddNewPostAsync(newPost);
             return Created($"api/posts/{post.Id}", post);
@@ -54,7 +55,7 @@ namespace WebAPI.Controllers.V1
 
         [SwaggerOperation(Summary = "Update a existing post")]
         [HttpPut]
-        public async Task<IActionResult> Update (UpdatePostDto updatePost)
+        public async Task<IActionResult> Update(UpdateCosmosPostDto updatePost)
         {
             await _postService.UpdatePostAsync(updatePost);
             return NoContent();
@@ -62,7 +63,7 @@ namespace WebAPI.Controllers.V1
 
         [SwaggerOperation(Summary = "Delete a specific post")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(string id)
         {
             await _postService.DeletePostAsync(id);
             return NoContent();
