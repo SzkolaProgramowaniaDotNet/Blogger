@@ -1,4 +1,4 @@
-﻿using Domain.Entities;
+﻿using Domain.Entities; 
 using Domain.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -19,9 +19,14 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Post>> GetAllAsync()
+        public async Task<IEnumerable<Post>> GetAllAsync(int pageNumber, int pageSize)
         {
-            return await _context.Posts.ToListAsync();
+            return await _context.Posts.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+        }
+
+        public async Task<int> GetAllCountAsync()
+        {
+            return await _context.Posts.CountAsync();
         }
 
         public async Task<Post> GetByIdAsync(int id)
@@ -39,7 +44,7 @@ namespace Infrastructure.Repositories
         public async Task UpdateAsync(Post post)
         {
             _context.Posts.Update(post);
-            await _context.SaveChangesAsync(); 
+            await _context.SaveChangesAsync();
             await Task.CompletedTask;
         }
 

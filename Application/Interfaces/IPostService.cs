@@ -1,4 +1,4 @@
-﻿using Application.Dto;
+﻿using Application.Dto; 
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,8 @@ namespace Application.Interfaces
 {
     public interface IPostService
     {
-        Task<IEnumerable<PostDto>> GetAllPostsAsync();
+        Task<IEnumerable<PostDto>> GetAllPostsAsync(int pageNumber, int pageSize);
+        Task<int> GetAllPostsCountAsync();
         Task<PostDto> GetPostByIdAsync(int id);
         Task<PostDto> AddNewPostAsync(CreatePostDto newPost);
         Task UpdatePostAsync(UpdatePostDto updatePost);
