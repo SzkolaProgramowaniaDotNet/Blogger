@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 
 namespace WebAPI.Controllers.V1
 {
-    //[Route("api/{v:apiVersion}/[controller]")]
     [Route("api/[controller]")]
     [ApiVersion("1.0")]
     [ApiController]
@@ -42,13 +41,6 @@ namespace WebAPI.Controllers.V1
             }
 
             return Ok(post);
-        }
-
-        [SwaggerOperation(Summary = "Retrieves posts by title")]
-        [HttpGet("{title}")]
-        public IActionResult Get(string  title)
-        {
-            return Ok();
         }
 
         [SwaggerOperation(Summary = "Create a new post")]
