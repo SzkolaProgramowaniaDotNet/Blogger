@@ -1,8 +1,11 @@
+using Application.Dto;
 using Application.Interfaces;
 using Application.Mappings;
 using Application.Services;
 using Domain.Interfaces;
 using Infrastructure.Repositories;
+using Microsoft.AspNet.OData.Builder;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -11,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OData.Edm;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
@@ -53,8 +57,18 @@ namespace WebAPI
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.EnableDependencyInjection();
+                endpoints.Filter().OrderBy().MaxTop(10);
+                endpoints.MapODataRoute("odata", "odata", GetEdmModel());
                 endpoints.MapControllers();
             });
+        }
+
+        public static IEdmModel GetEdmModel()
+        {
+            var builder = new ODataConventionModelBuilder();
+            builder.EntitySet<PostDto>("Posts");
+            return builder.GetEdmModel();
         }
     }
 }

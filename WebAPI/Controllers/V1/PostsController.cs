@@ -1,5 +1,6 @@
 ﻿using Application.Dto;
 using Application.Interfaces;
+using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -32,7 +33,7 @@ namespace WebAPI.Controllers.V1
             return Ok(SortingHelper.GetSortFields().Select(x => x.Key));
         }
 
-        [SwaggerOperation(Summary = "Retrieves all posts")]
+        [SwaggerOperation(Summary = "Retrieves paged posts")]
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] PaginationFilter paginationFilter, [FromQuery] SortingFilter sortingFilter, [FromQuery] string filterBy = "")
         {
@@ -46,6 +47,14 @@ namespace WebAPI.Controllers.V1
             var totalRecords = await _postService.GetAllPostsCountAsync(filterBy);
 
             return Ok(PaginationHelper.CreatePagedResponse(posts, validPaginationFilter, totalRecords));
+        }
+
+        [SwaggerOperation(Summary = "Retrieves all posts")]
+        [HttpGet("[action]")]
+        [EnableQuery]
+        public IQueryable<PostDto> GetAll()
+        {
+            return _postService.GetAllPostsAsync();
         }
 
         [SwaggerOperation(Summary = "Retrieves a specific post by unique id")]

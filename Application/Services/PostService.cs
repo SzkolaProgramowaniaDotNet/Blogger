@@ -22,6 +22,12 @@ namespace Application.Services
             _mapper = mapper;
         }
 
+        public IQueryable<PostDto> GetAllPostsAsync()
+        {
+            var posts = _postRepository.GetAllAsync();
+            return _mapper.ProjectTo<PostDto>(posts);
+        }
+
         public async Task<IEnumerable<PostDto>> GetAllPostsAsync(int pageNumber, int pageSize, string sortField, bool ascending, string filterBy)
         {
             var posts = await _postRepository.GetAllAsync(pageNumber, pageSize, sortField, ascending, filterBy);
