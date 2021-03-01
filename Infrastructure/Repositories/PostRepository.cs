@@ -20,7 +20,7 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public IQueryable<Post> GetAllAsync()
+        public IQueryable<Post> GetAll()
         {
             return _context.Posts.AsQueryable();
         }

@@ -50,11 +50,11 @@ namespace WebAPI.Controllers.V1
         }
 
         [SwaggerOperation(Summary = "Retrieves all posts")]
-        [HttpGet("[action]")]
         [EnableQuery]
+        [HttpGet("[action]")]
         public IQueryable<PostDto> GetAll()
         {
-            return _postService.GetAllPostsAsync();
+            return _postService.GetAllPosts();
         }
 
         [SwaggerOperation(Summary = "Retrieves a specific post by unique id")]

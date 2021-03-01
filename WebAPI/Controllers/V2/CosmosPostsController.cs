@@ -11,8 +11,8 @@ using System.Threading.Tasks;
 
 namespace WebAPI.Controllers.V2
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     [ApiVersion("2.0")]
-    //[Route("api/{v:apiVersion}/[controller]")]
     [Route("api/[controller]")]
     [ApiController]
     public class CosmosPostsController : ControllerBase
