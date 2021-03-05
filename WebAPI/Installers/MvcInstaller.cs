@@ -39,6 +39,8 @@ namespace WebAPI.Installers
                     options.JsonSerializerOptions.WriteIndented = true;
                 });
 
+            services.AddAuthorization();
+
             services.AddOData();
         }
     }

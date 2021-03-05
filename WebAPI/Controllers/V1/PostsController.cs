@@ -18,6 +18,7 @@ namespace WebAPI.Controllers.V1
 
     [Route("api/[controller]")]
     [ApiVersion("1.0")]
+    [Authorize]
     [ApiController]
     public class PostsController : ControllerBase
     {
