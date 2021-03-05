@@ -1,5 +1,7 @@
 ﻿using Domain.Common; 
 using Domain.Entities;
+using Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Data
 {
-    public class BloggerContext : DbContext
+    public class BloggerContext : IdentityDbContext<ApplicationUser>
     {
-        public BloggerContext(DbContextOptions options) : base(options)
+        public BloggerContext(DbContextOptions<BloggerContext> options) : base(options)
         {
         }
 

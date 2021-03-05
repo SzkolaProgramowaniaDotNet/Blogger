@@ -15,11 +15,11 @@ namespace WebAPI.Controllers.V2
     [ApiVersion("2.0")]
     [Route("api/[controller]")]
     [ApiController]
-    public class CosmosPostsController : ControllerBase
+    public class PostsController : ControllerBase
     {
         private readonly ICosmosPostService _postService;
 
-        public CosmosPostsController(ICosmosPostService postService)
+        public PostsController(ICosmosPostService postService)
         {
             _postService = postService;
         }

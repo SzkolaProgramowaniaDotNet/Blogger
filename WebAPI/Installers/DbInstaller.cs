@@ -15,6 +15,7 @@ namespace WebAPI.Installers
         {
             services.AddDbContext<BloggerContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("BloggerCS")));
+
         }
     }
 }

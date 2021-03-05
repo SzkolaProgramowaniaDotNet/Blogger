@@ -22,9 +22,9 @@ namespace Application.Services
             _mapper = mapper;
         }
 
-        public IQueryable<PostDto> GetAllPosts()
+        public IQueryable<PostDto> GetAllPostsAsync()
         {
-            var posts = _postRepository.GetAll();
+            var posts = _postRepository.GetAllAsync();
             return _mapper.ProjectTo<PostDto>(posts);
         }
 

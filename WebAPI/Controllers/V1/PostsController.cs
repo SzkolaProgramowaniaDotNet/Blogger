@@ -1,6 +1,7 @@
 ﻿using Application.Dto;
 using Application.Interfaces;
 using Microsoft.AspNet.OData;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -14,6 +15,7 @@ using WebAPI.Wrappers;
 
 namespace WebAPI.Controllers.V1
 {
+
     [Route("api/[controller]")]
     [ApiVersion("1.0")]
     [ApiController]
@@ -50,11 +52,11 @@ namespace WebAPI.Controllers.V1
         }
 
         [SwaggerOperation(Summary = "Retrieves all posts")]
-        [EnableQuery]
         [HttpGet("[action]")]
+        [EnableQuery]
         public IQueryable<PostDto> GetAll()
         {
-            return _postService.GetAllPosts();
+            return _postService.GetAllPostsAsync();
         }
 
         [SwaggerOperation(Summary = "Retrieves a specific post by unique id")]
