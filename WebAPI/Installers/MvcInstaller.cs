@@ -41,6 +41,8 @@ namespace WebAPI.Installers
 
             services.AddAuthorization();
 
+            services.AddTransient<UserResloverService>();
+
             services.AddOData();
         }
     }
