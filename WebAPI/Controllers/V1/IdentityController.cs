@@ -21,11 +21,13 @@ namespace WebAPI.Controllers.V1
     public class IdentityController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManger;
         private readonly IConfiguration _configuration;
 
-        public IdentityController(UserManager<ApplicationUser> userManager, IConfiguration configuration)
+        public IdentityController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManger, IConfiguration configuration)
         {
             _userManager = userManager;
+            _roleManger = roleManger;
             _configuration = configuration;
         }
 
@@ -60,6 +62,50 @@ namespace WebAPI.Controllers.V1
                 });
             }
 
+            if (!await _roleManger.RoleExistsAsync(UserRoles.User))
+                await _roleManger.CreateAsync(new IdentityRole(UserRoles.User));
+
+            await _userManager.AddToRoleAsync(user, UserRoles.User);
+
+            return Ok(new Response<bool> { Succeeded = true, Message = "User created successfully!" });
+        }
+
+        [HttpPost]
+        [Route("RegisterAdmin")]
+        public async Task<IActionResult> RegisterAdmin(RegisterModel register)
+        {
+            var userExists = await _userManager.FindByNameAsync(register.Username);
+            if (userExists != null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response<bool>
+                {
+                    Succeeded = false,
+                    Message = "User already exists!"
+                });
+            }
+
+            ApplicationUser user = new ApplicationUser()
+            {
+                Email = register.Email,
+                SecurityStamp = Guid.NewGuid().ToString(),
+                UserName = register.Username
+            };
+            var result = await _userManager.CreateAsync(user, register.Password);
+            if (!result.Succeeded)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response<bool>
+                {
+                    Succeeded = false,
+                    Message = "User creation failed! Please check user details and try agian.",
+                    Errors = result.Errors.Select(x => x.Description)
+                });
+            }
+
+            if (!await _roleManger.RoleExistsAsync(UserRoles.Admin))
+                await _roleManger.CreateAsync(new IdentityRole(UserRoles.Admin));
+
+            await _userManager.AddToRoleAsync(user, UserRoles.Admin);
+
             return Ok(new Response<bool> { Succeeded = true, Message = "User created successfully!" });
         }
 
@@ -76,6 +122,12 @@ namespace WebAPI.Controllers.V1
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 };
+
+                var userRoles = await _userManager.GetRolesAsync(user);
+                foreach (var userRole in userRoles)
+                {
+                    authClaims.Add(new Claim(ClaimTypes.Role, userRole));
+                }
 
                 var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
 

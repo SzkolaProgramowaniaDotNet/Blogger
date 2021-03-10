@@ -1,5 +1,6 @@
 ﻿using Application.Dto;
 using Application.Interfaces;
+using Infrastructure.Identity;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -55,6 +56,7 @@ namespace WebAPI.Controllers.V1
         }
 
         [SwaggerOperation(Summary = "Retrieves all posts")]
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpGet("[action]")]
         [EnableQuery]
         public IQueryable<PostDto> GetAll()
@@ -77,6 +79,7 @@ namespace WebAPI.Controllers.V1
         }
 
         [SwaggerOperation(Summary = "Create a new post")]
+        [Authorize(Roles = UserRoles.User)]
         [HttpPost]
         public async Task<IActionResult> Create(CreatePostDto newPost)
         {
@@ -85,6 +88,7 @@ namespace WebAPI.Controllers.V1
         }
 
         [SwaggerOperation(Summary = "Update a existing post")]
+        [Authorize(Roles = UserRoles.User)]
         [HttpPut]
         public async Task<IActionResult> Update (UpdatePostDto updatePost)
         {
@@ -99,11 +103,14 @@ namespace WebAPI.Controllers.V1
         }
 
         [SwaggerOperation(Summary = "Delete a specific post")]
+        [Authorize(Roles = UserRoles.AdminOrUser)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var userOwnsPost = await _postService.UserOwnsPostAsync(id, User.FindFirstValue(ClaimTypes.NameIdentifier));
-            if (!userOwnsPost)
+            var isAdmin = User.FindFirstValue(ClaimTypes.Role).Contains(UserRoles.Admin);
+
+            if (!isAdmin && !userOwnsPost)
             {
                 return BadRequest(new Response<bool>() { Succeeded = false, Message = "You do not own this post." });
             }
