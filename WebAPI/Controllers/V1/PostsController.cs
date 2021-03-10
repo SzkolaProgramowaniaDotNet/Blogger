@@ -108,7 +108,7 @@ namespace WebAPI.Controllers.V1
         public async Task<IActionResult> Delete(int id)
         {
             var userOwnsPost = await _postService.UserOwnsPostAsync(id, User.FindFirstValue(ClaimTypes.NameIdentifier));
-            var isAdmin = User.FindFirstValue(ClaimTypes.Role).Contains(UserRoles.Admin);
+            var isAdmin = User.IsInRole(UserRoles.Admin);
 
             if (!isAdmin && !userOwnsPost)
             {
