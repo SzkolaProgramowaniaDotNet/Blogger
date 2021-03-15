@@ -95,7 +95,7 @@ namespace WebAPI.Controllers.V1
             var userOwnsPost = await _postService.UserOwnsPostAsync(updatePost.Id, User.FindFirstValue(ClaimTypes.NameIdentifier));
             if (!userOwnsPost)
             {
-                return BadRequest(new Response<bool>() { Succeeded = false, Message = "You do not own this post." });
+                return BadRequest(new Response(false, "You do not own this post."));
             }
 
             await _postService.UpdatePostAsync(updatePost);
@@ -112,7 +112,7 @@ namespace WebAPI.Controllers.V1
 
             if (!isAdmin && !userOwnsPost)
             {
-                return BadRequest(new Response<bool>() { Succeeded = false, Message = "You do not own this post." });
+                return BadRequest(new Response(false, "You do not own this post."));
             }
 
             await _postService.DeletePostAsync(id);

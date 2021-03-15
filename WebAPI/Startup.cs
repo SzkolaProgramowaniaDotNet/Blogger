@@ -26,6 +26,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebAPI.Installers;
+using WebAPI.Middleware;
 
 namespace WebAPI
 {
@@ -55,6 +56,8 @@ namespace WebAPI
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI v1"));
             }
 
+            app.UseMiddleware<ErrorHandlingMiddleware>();
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -68,8 +71,6 @@ namespace WebAPI
                 endpoints.MapODataRoute("odata", "odata", GetEdmModel());
                 endpoints.MapControllers();
             });
-
-
         }
 
         public static IEdmModel GetEdmModel()

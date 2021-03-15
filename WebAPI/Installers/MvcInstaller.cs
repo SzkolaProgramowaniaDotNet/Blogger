@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebAPI.Middleware;
 
 namespace WebAPI.Installers
 {
@@ -42,8 +43,10 @@ namespace WebAPI.Installers
             services.AddAuthorization();
 
             services.AddTransient<UserResloverService>();
+            services.AddScoped<ErrorHandlingMiddleware>();
 
             services.AddOData();
+
         }
     }
 }
