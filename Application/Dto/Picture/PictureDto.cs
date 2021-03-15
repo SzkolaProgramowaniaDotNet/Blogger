@@ -9,14 +9,16 @@ using System.Threading.Tasks;
 
 namespace Application.Dto
 {
-    public class CreatePostDto : IMap
+    public class PictureDto : IMap
     {
-        public string Title { get; set; }
-        public string Content { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public byte[] Image { get; set; }
+        public bool Main { get; set; }
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<CreatePostDto, Post>();
+            profile.CreateMap<Picture, PictureDto>();
         }
     }
 }
