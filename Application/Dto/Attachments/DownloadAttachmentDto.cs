@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Application.Dto.Attachments
 {
-    public class DownloadAttachmentDto
+    public class DownloadAttachmentDto : AttachmentDto
     {
-        public string Name { get; set; }
         public byte[] Content { get; set; }
     }
 }

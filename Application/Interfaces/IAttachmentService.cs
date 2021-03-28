@@ -12,7 +12,7 @@ namespace Application.Interfaces
     {
         Task<IEnumerable<AttachmentDto>> GetAttachmentsByPostIdAsync(int postId);
         Task<DownloadAttachmentDto> DownloadAttachmentByIdAsync(int id);
-        Task<AttachmentDto> AddAttachmentToPost(int postId, IFormFile file);
+        Task<AttachmentDto> AddAttachmentToPostAsync(int postId, IFormFile file);
         Task DeleteAttachmentAsync(int id);
 
     }

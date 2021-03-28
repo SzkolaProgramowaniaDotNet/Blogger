@@ -35,7 +35,7 @@ namespace WebAPI.Controllers.V1
 
         [SwaggerOperation(Summary = "Retrieves a atachments by unique post id")]
         [HttpGet("[action]/{postId}")]
-        public async Task<IActionResult> GetByPostId(int postId)
+        public async Task<IActionResult> GetByPostIdAsync(int postId)
         {
             var pictures = await _attachmentService.GetAttachmentsByPostIdAsync(postId);
             return Ok(new Response<IEnumerable<AttachmentDto>>(pictures));
@@ -43,9 +43,15 @@ namespace WebAPI.Controllers.V1
 
 
         [SwaggerOperation(Summary = "Download a specific attachment by unique id")]
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Download(int id)
+        [HttpGet("{postId}/{id}")]
+        public async Task<IActionResult> DownloadAsync(int id, int postId)
         {
+            var userOwnsPost = await _postService.UserOwnsPostAsync(postId, User.FindFirstValue(ClaimTypes.NameIdentifier));
+            if (!userOwnsPost)
+            {
+                return BadRequest(new Response(false, "You do not own this post."));
+            }
+
             var attachment = await _attachmentService.DownloadAttachmentByIdAsync(id);
             if (attachment == null)
             {
@@ -56,7 +62,7 @@ namespace WebAPI.Controllers.V1
 
         [SwaggerOperation(Summary = "Add a new attachment to post")]
         [HttpPost("{postId}")]
-        public async Task<IActionResult> AddToPost(int postId, IFormFile file)
+        public async Task<IActionResult> AddToPostAsync(int postId, IFormFile file)
         {
             var post = await _postService.GetPostByIdAsync(postId);
             if (post == null)
@@ -70,15 +76,15 @@ namespace WebAPI.Controllers.V1
                 return BadRequest(new Response(false, "You do not own this post."));
             }
 
-            var attachment = await _attachmentService.AddAttachmentToPost(postId, file);
+            var attachment = await _attachmentService.AddAttachmentToPostAsync(postId, file);
             return Created($"api/attachments/{attachment.Id}", new Response<AttachmentDto>(attachment));
         }
 
-        [SwaggerOperation(Summary = "Delete a specific ")]
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        [SwaggerOperation(Summary = "Delete a specific attachment")]
+        [HttpDelete("{postId}/{id}")]
+        public async Task<IActionResult> DeleteAsync(int id, int postId)
         {
-            var userOwnsPost = await _postService.UserOwnsPostAsync(id, User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var userOwnsPost = await _postService.UserOwnsPostAsync(postId, User.FindFirstValue(ClaimTypes.NameIdentifier));
             if (!userOwnsPost)
             {
                 return BadRequest(new Response(false, "You do not own this post."));

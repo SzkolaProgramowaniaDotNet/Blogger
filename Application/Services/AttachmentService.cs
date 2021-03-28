@@ -40,11 +40,11 @@ namespace Application.Services
             return new DownloadAttachmentDto()
             {
                 Name = attachment.Name,
-                Content = System.IO.File.ReadAllBytes(attachment.Path)
+                Content = File.ReadAllBytes(attachment.Path)
             };
         }
 
-        public async Task<AttachmentDto> AddAttachmentToPost(int postId, IFormFile file)
+        public async Task<AttachmentDto> AddAttachmentToPostAsync(int postId, IFormFile file)
         {
             var post = await _postRepository.GetByIdAsync(postId);
 
