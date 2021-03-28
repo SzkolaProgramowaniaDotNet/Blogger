@@ -12,7 +12,7 @@ namespace Domain.Interfaces
         Task<IEnumerable<Picture>> GetByPostIdAsync(int postId);
         Task<Picture> GetByIdAsync(int id);
         Task<Picture> AddAsync(Picture picture);
-        Task SetMainPicture(int postId, int id);
+        Task SetMainPictureAsync(int postId, int id);
         Task DeleteAsync(Picture picture);
     }
 }

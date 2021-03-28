@@ -37,7 +37,7 @@ namespace Application.Services
             return _mapper.Map<PictureDto>(picture);
         }
 
-        public async Task<PictureDto> AddPictureToPost(int postId, IFormFile file)
+        public async Task<PictureDto> AddPictureToPostAsync(int postId, IFormFile file)
         {
             var post = await _postRepository.GetByIdAsync(postId);
             var existingPictures = await _pictureRepository.GetByPostIdAsync(postId);
@@ -54,9 +54,9 @@ namespace Application.Services
             return _mapper.Map<PictureDto>(result);
         }
 
-        public async Task SetMainPicture(int postId, int id)
+        public async Task SetMainPictureAsync(int postId, int id)
         {
-            await _pictureRepository.SetMainPicture(postId, id);
+            await _pictureRepository.SetMainPictureAsync(postId, id);
         }
 
         public async Task DeletePictureAsync(int id)

@@ -36,7 +36,7 @@ namespace Infrastructure.Repositories
             return createdPicture.Entity;
         }
 
-        public async Task SetMainPicture(int postId, int id)
+        public async Task SetMainPictureAsync(int postId, int id)
         {
             var currentMainPicture = 
                 await _context.Pictures.Include(x => x.Posts)

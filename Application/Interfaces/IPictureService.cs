@@ -12,8 +12,8 @@ namespace Application.Interfaces
     {
         Task<IEnumerable<PictureDto>> GetPicturesByPostIdAsync(int postId);
         Task<PictureDto> GetPictureByIdAsync(int id);
-        Task<PictureDto> AddPictureToPost(int postId, IFormFile file);
-        Task SetMainPicture(int postId, int id);
+        Task<PictureDto> AddPictureToPostAsync(int postId, IFormFile file);
+        Task SetMainPictureAsync(int postId, int id);
         Task DeletePictureAsync(int id);
     }
 }
