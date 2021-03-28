@@ -89,7 +89,7 @@ namespace WebAPI.Controllers.V1
 
         [SwaggerOperation(Summary = "Delete a specific picture")]
         [HttpDelete("{postId}/{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id, int postId)
         {
             var userOwnsPost = await _postService.UserOwnsPostAsync(postId, User.FindFirstValue(ClaimTypes.NameIdentifier));
             if (!userOwnsPost)
