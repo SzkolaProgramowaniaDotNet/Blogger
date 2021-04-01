@@ -1,5 +1,6 @@
 ﻿using Application.Dto;
 using Application.Interfaces;
+using Application.Validators;
 using Infrastructure.Identity;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Authorization;
@@ -11,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using WebAPI.Attributes;
 using WebAPI.Filters;
 using WebAPI.Helpers;
 using WebAPI.Wrappers;
@@ -78,6 +80,7 @@ namespace WebAPI.Controllers.V1
             return Ok(new Response<PostDto>(post));
         }
 
+        [ValidateFilter]
         [SwaggerOperation(Summary = "Create a new post")]
         [Authorize(Roles = UserRoles.User)]
         [HttpPost]

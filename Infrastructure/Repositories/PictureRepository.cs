@@ -38,13 +38,13 @@ namespace Infrastructure.Repositories
 
         public async Task SetMainPictureAsync(int postId, int id)
         {
-            var currentMainPicture = 
+            var currentMainPicture =
                 await _context.Pictures.Include(x => x.Posts)
                 .Where(x => x.Posts.Select(x => x.Id).Contains(postId))
                 .SingleOrDefaultAsync(x => x.Main);
             currentMainPicture.Main = false;
 
-            var newMainPicture = 
+            var newMainPicture =
                 await _context.Pictures
                 .SingleOrDefaultAsync(x => x.Id == id);
             newMainPicture.Main = true;
