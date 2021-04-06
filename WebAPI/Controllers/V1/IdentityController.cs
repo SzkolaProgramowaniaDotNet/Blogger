@@ -12,6 +12,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using WebAPI.Models;
+using WebAPI.SwaggerExamples.Responses;
 using WebAPI.Wrappers;
 
 namespace WebAPI.Controllers.V1
@@ -31,6 +32,13 @@ namespace WebAPI.Controllers.V1
             _configuration = configuration;
         }
 
+        /// <summary>
+        /// Registers the user in the system
+        /// </summary>
+        /// <response code="200">User created successfully!</response>
+        /// <response code="500">User already exists!</response>
+        [ProducesResponseType(typeof(RegisterResponseStatus200), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RegisterResponseStatus500), StatusCodes.Status500InternalServerError)]
         [HttpPost]
         [Route("Register")]
         public async Task<IActionResult> Register(RegisterModel register)
@@ -38,7 +46,7 @@ namespace WebAPI.Controllers.V1
             var userExists = await _userManager.FindByNameAsync(register.Username);
             if (userExists != null)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response<bool>
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response
                 {
                     Succeeded = false,
                     Message = "User already exists!"
@@ -67,9 +75,12 @@ namespace WebAPI.Controllers.V1
 
             await _userManager.AddToRoleAsync(user, UserRoles.User);
 
-            return Ok(new Response<bool> { Succeeded = true, Message = "User created successfully!" });
+            return Ok(new Response { Succeeded = true, Message = "User created successfully!" });
         }
 
+        /// <summary>
+        /// Registers the admin in the system
+        /// </summary>
         [HttpPost]
         [Route("RegisterAdmin")]
         public async Task<IActionResult> RegisterAdmin(RegisterModel register)
@@ -77,7 +88,7 @@ namespace WebAPI.Controllers.V1
             var userExists = await _userManager.FindByNameAsync(register.Username);
             if (userExists != null)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response<bool>
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response
                 {
                     Succeeded = false,
                     Message = "User already exists!"
@@ -106,9 +117,12 @@ namespace WebAPI.Controllers.V1
 
             await _userManager.AddToRoleAsync(user, UserRoles.Admin);
 
-            return Ok(new Response<bool> { Succeeded = true, Message = "User created successfully!" });
+            return Ok(new Response { Succeeded = true, Message = "User created successfully!" });
         }
 
+        /// <summary>
+        /// Logs the user into the system
+        /// </summary>
         [HttpPost]
         [Route("Login")]
         public async Task<IActionResult> Login(LoginModel login)

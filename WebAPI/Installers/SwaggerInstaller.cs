@@ -3,9 +3,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using OData.Swagger.Services;
+using Swashbuckle.AspNetCore.Filters;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace WebAPI.Installers
@@ -18,6 +21,7 @@ namespace WebAPI.Installers
             {
                 c.EnableAnnotations();
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPI", Version = "v1" });
+                c.ExampleFilters();
 
                 // add JWT Authentication
                 var securityScheme = new OpenApiSecurityScheme
@@ -40,9 +44,17 @@ namespace WebAPI.Installers
                     {securityScheme, new string[] { }}
                 });
 
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+
             });
 
             services.AddOdataSwaggerSupport();
+
+            services.AddSwaggerExamplesFromAssemblyOf<Startup>();
+
         }
     }
 }

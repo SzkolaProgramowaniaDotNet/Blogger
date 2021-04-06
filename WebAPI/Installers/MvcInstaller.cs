@@ -44,7 +44,8 @@ namespace WebAPI.Installers
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.WriteIndented = true;
-                });
+                })
+                .AddXmlSerializerFormatters();
 
             services.AddAuthorization();
 
