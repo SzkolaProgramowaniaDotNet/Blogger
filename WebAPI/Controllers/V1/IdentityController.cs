@@ -41,7 +41,7 @@ namespace WebAPI.Controllers.V1
         [ProducesResponseType(typeof(RegisterResponseStatus500), StatusCodes.Status500InternalServerError)]
         [HttpPost]
         [Route("Register")]
-        public async Task<IActionResult> Register(RegisterModel register)
+        public async Task<IActionResult> RegisterAsync(RegisterModel register)
         {
             var userExists = await _userManager.FindByNameAsync(register.Username);
             if (userExists != null)
@@ -83,7 +83,7 @@ namespace WebAPI.Controllers.V1
         /// </summary>
         [HttpPost]
         [Route("RegisterAdmin")]
-        public async Task<IActionResult> RegisterAdmin(RegisterModel register)
+        public async Task<IActionResult> RegisterAdminAsync(RegisterModel register)
         {
             var userExists = await _userManager.FindByNameAsync(register.Username);
             if (userExists != null)
@@ -125,7 +125,7 @@ namespace WebAPI.Controllers.V1
         /// </summary>
         [HttpPost]
         [Route("Login")]
-        public async Task<IActionResult> Login(LoginModel login)
+        public async Task<IActionResult> LoginAsync(LoginModel login)
         {
             var user = await _userManager.FindByNameAsync(login.Username);
             if (user != null && await _userManager.CheckPasswordAsync(user, login.Password))
@@ -151,10 +151,10 @@ namespace WebAPI.Controllers.V1
                     signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                     );
 
-                return Ok(new
+                return Ok(new AuthSuccessResponse()
                 {
-                    token = new JwtSecurityTokenHandler().WriteToken(token),
-                    expiration = token.ValidTo
+                    Token = new JwtSecurityTokenHandler().WriteToken(token),
+                    Expiration = token.ValidTo
                 });
             }
             return Unauthorized();

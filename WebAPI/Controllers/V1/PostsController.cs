@@ -43,7 +43,7 @@ namespace WebAPI.Controllers.V1
         [SwaggerOperation(Summary = "Retrieves paged posts")]
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] PaginationFilter paginationFilter, [FromQuery] SortingFilter sortingFilter, [FromQuery] string filterBy = "")
+        public async Task<IActionResult> GetAsync([FromQuery] PaginationFilter paginationFilter, [FromQuery] SortingFilter sortingFilter, [FromQuery] string filterBy = "")
         {
             var validPaginationFilter = new PaginationFilter(paginationFilter.PageNumber, paginationFilter.PageSize);
             var validSortingFilter = new SortingFilter(sortingFilter.SortField, sortingFilter.Ascending);
@@ -69,7 +69,7 @@ namespace WebAPI.Controllers.V1
         [SwaggerOperation(Summary = "Retrieves a specific post by unique id")]
         [AllowAnonymous]
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GetAsync(int id)
         {
             var post = await _postService.GetPostByIdAsync(id);
             if (post == null)
@@ -84,7 +84,7 @@ namespace WebAPI.Controllers.V1
         [SwaggerOperation(Summary = "Create a new post")]
         [Authorize(Roles = UserRoles.User)]
         [HttpPost]
-        public async Task<IActionResult> Create(CreatePostDto newPost)
+        public async Task<IActionResult> CreateAsync(CreatePostDto newPost)
         {
             var post = await _postService.AddNewPostAsync(newPost, User.FindFirstValue(ClaimTypes.NameIdentifier));
             return Created($"api/posts/{post.Id}", new Response<PostDto>(post));
@@ -93,7 +93,7 @@ namespace WebAPI.Controllers.V1
         [SwaggerOperation(Summary = "Update a existing post")]
         [Authorize(Roles = UserRoles.User)]
         [HttpPut]
-        public async Task<IActionResult> Update (UpdatePostDto updatePost)
+        public async Task<IActionResult> UpdateAsync(UpdatePostDto updatePost)
         {
             var userOwnsPost = await _postService.UserOwnsPostAsync(updatePost.Id, User.FindFirstValue(ClaimTypes.NameIdentifier));
             if (!userOwnsPost)
@@ -108,7 +108,7 @@ namespace WebAPI.Controllers.V1
         [SwaggerOperation(Summary = "Delete a specific post")]
         [Authorize(Roles = UserRoles.AdminOrUser)]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
             var userOwnsPost = await _postService.UserOwnsPostAsync(id, User.FindFirstValue(ClaimTypes.NameIdentifier));
             var isAdmin = User.IsInRole(UserRoles.Admin);
