@@ -13,15 +13,15 @@ namespace Blogger.Sdk
     public interface IBloggerApi
     {
         [Get("/api/posts/{id}")]
-        Task<ApiResponse<Response<PostDto>>> GetAsync(int id);
+        Task<ApiResponse<Response<PostDto>>> GetPostAsync(int id);
 
         [Post("/api/posts")]
-        Task<ApiResponse<Response<PostDto>>> CreateAsync(CreatePostDto newPost);
+        Task<ApiResponse<Response<PostDto>>> CreatePostAsync(CreatePostDto newPost);
 
         [Put("/api/posts")]
-        Task UpdateAsync(UpdatePostDto updatePost);
+        Task UpdatePostAsync(UpdatePostDto updatePost);
 
         [Delete("/api/posts/{id}")]
-        Task DeleteAsync(int id);
+        Task DeletePostAsync(int id);
     }
 }

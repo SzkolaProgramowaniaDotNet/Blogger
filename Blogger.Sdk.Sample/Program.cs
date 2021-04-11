@@ -32,21 +32,21 @@ namespace Blogger.Sdk.Sample
 
             cachedToken = login.Content.Token;
 
-            var createdPost = await bloggerApi.CreateAsync(new CreatePostDto 
+            var createdPost = await bloggerApi.CreatePostAsync(new CreatePostDto 
             { 
                 Title = "Post Sdk",
                 Content = "Treść Sdk"
             });
 
-            var retrievedPost = await bloggerApi.GetAsync(createdPost.Content.Data.Id);
+            var retrievedPost = await bloggerApi.GetPostAsync(createdPost.Content.Data.Id);
 
-            await bloggerApi.UpdateAsync(new UpdatePostDto 
+            await bloggerApi.UpdatePostAsync(new UpdatePostDto 
             {
                 Id = createdPost.Content.Data.Id,
                 Content = "Nowa treść Sdk"
             });
 
-            await bloggerApi.DeleteAsync(createdPost.Content.Data.Id);
+            await bloggerApi.DeletePostAsync(createdPost.Content.Data.Id);
         }
     }
 }
