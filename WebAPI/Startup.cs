@@ -3,6 +3,7 @@ using Application.Interfaces;
 using Application.Mappings;
 using Application.Services;
 using Domain.Interfaces;
+using HealthChecks.UI.Client;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
 using Microsoft.AspNet.OData.Builder;
@@ -62,28 +63,6 @@ namespace WebAPI
 
             app.UseMiddleware<ErrorHandlingMiddleware>();
 
-            app.UseHealthChecks("/health", new HealthCheckOptions
-            {
-                ResponseWriter = async (context, report) =>
-                {
-                    context.Response.ContentType = "application/json";
-
-                    var response = new HealthCheckResponse
-                    {
-                        Status = report.Status.ToString(),
-                        Checks = report.Entries.Select(x => new HealthCheck
-                        {
-                            Component = x.Key,
-                            Status = x.Value.Status.ToString(),
-                            Description = x.Value.Description
-                        }),
-                        Duration = report.TotalDuration
-                    };
-
-                    await context.Response.WriteAsync(JsonConvert.SerializeObject(response));
-                }
-            });
-
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -96,6 +75,12 @@ namespace WebAPI
                 endpoints.Filter().OrderBy().MaxTop(10);
                 endpoints.MapODataRoute("odata", "odata", GetEdmModel());
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health", new HealthCheckOptions()
+                {
+                    Predicate = _ => true,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
+                endpoints.MapHealthChecksUI();
             });
         }
 
