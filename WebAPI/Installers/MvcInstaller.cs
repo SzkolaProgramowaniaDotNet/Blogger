@@ -29,6 +29,8 @@ namespace WebAPI.Installers
             services.AddApplication();
             services.AddInfrastructure();
 
+            services.AddMemoryCache();
+
             services.AddApiVersioning(x =>
             {
                 x.DefaultApiVersion = new ApiVersion(1, 0);

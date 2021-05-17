@@ -6,6 +6,8 @@ using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
@@ -27,10 +29,15 @@ namespace WebAPI.Controllers.V1
     public class PostsController : ControllerBase
     {
         private readonly IPostService _postService;
-        
-        public PostsController(IPostService postService)
+        private readonly IMemoryCache _memoryCache;
+        private readonly ILogger _logger;
+
+
+        public PostsController(IPostService postService, IMemoryCache memoryCache, ILogger<PostsController> logger)
         {
             _postService = postService;
+            _memoryCache = memoryCache;
+            _logger = logger;
         }
 
         [SwaggerOperation(Summary = "Retrieves sort fields")]
@@ -63,7 +70,21 @@ namespace WebAPI.Controllers.V1
         [EnableQuery]
         public IQueryable<PostDto> GetAll()
         {
-            return _postService.GetAllPostsAsync();
+            var posts = _memoryCache.Get<IQueryable<PostDto>>("posts");
+            if (posts == null)
+            {
+                _logger.LogInformation("Fetching from service.");
+                posts = _postService.GetAllPostsAsync();
+                _memoryCache.Set("posts", posts, TimeSpan.FromMinutes(1));
+            }
+            else
+            {
+                _logger.LogInformation("Fetching from cache");
+            }
+
+
+
+            return posts;
         }
 
         [SwaggerOperation(Summary = "Retrieves a specific post by unique id")]

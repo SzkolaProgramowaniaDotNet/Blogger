@@ -40,20 +40,20 @@ namespace WebAPI
                 {
                     webBuilder.UseStartup<Startup>();
                 })
-                //.UseNLog();
-                .UseSerilog((context, configuration) => 
-                {
-                    configuration.Enrich.FromLogContext()
-                    .Enrich.WithMachineName()
-                    .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(context.Configuration["ElasticConfiguration:Uri"]))
-                    {
-                        IndexFormat = $"{context.Configuration["ApplicationName"]}-logs-{context.HostingEnvironment.EnvironmentName?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyu-MM}",
-                        AutoRegisterTemplate = true,
-                        NumberOfShards = 2,
-                        NumberOfReplicas = 1
-                    })
-                    .Enrich.WithProperty("Enviroment", context.HostingEnvironment.EnvironmentName)
-                    .ReadFrom.Configuration(context.Configuration);
-                });
+                .UseNLog();
+                //.UseSerilog((context, configuration) => 
+                //{
+                //    configuration.Enrich.FromLogContext()
+                //    .Enrich.WithMachineName()
+                //    .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(context.Configuration["ElasticConfiguration:Uri"]))
+                //    {
+                //        IndexFormat = $"{context.Configuration["ApplicationName"]}-logs-{context.HostingEnvironment.EnvironmentName?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyu-MM}",
+                //        AutoRegisterTemplate = true,
+                //        NumberOfShards = 2,
+                //        NumberOfReplicas = 1
+                //    })
+                //    .Enrich.WithProperty("Enviroment", context.HostingEnvironment.EnvironmentName)
+                //    .ReadFrom.Configuration(context.Configuration);
+                //});
     }
 }
