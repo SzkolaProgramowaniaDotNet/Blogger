@@ -15,6 +15,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using WebAPI.Attributes;
+using WebAPI.Cache;
 using WebAPI.Filters;
 using WebAPI.Helpers;
 using WebAPI.Wrappers;
@@ -49,6 +50,7 @@ namespace WebAPI.Controllers.V1
 
         [SwaggerOperation(Summary = "Retrieves paged posts")]
         [AllowAnonymous]
+        [Cached(600)]
         [HttpGet]
         public async Task<IActionResult> GetAsync([FromQuery] PaginationFilter paginationFilter, [FromQuery] SortingFilter sortingFilter, [FromQuery] string filterBy = "")
         {
