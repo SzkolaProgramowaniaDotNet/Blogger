@@ -1,3 +1,5 @@
+using App.Metrics.AspNetCore;
+using App.Metrics.Formatters.Prometheus;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -40,7 +42,17 @@ namespace WebAPI
                 {
                     webBuilder.UseStartup<Startup>();
                 })
-                .UseNLog();
+                .UseNLog()
+                .UseMetricsWebTracking()
+                .UseMetrics(options =>
+                {
+                    options.EndpointOptions = endpointOptions =>
+                    {
+                        endpointOptions.MetricsTextEndpointOutputFormatter = new MetricsPrometheusTextOutputFormatter();
+                        endpointOptions.MetricsEndpointOutputFormatter = new MetricsPrometheusProtobufOutputFormatter();
+                        endpointOptions.EnvironmentInfoEndpointEnabled = false;
+                    };
+                });
                 //.UseSerilog((context, configuration) => 
                 //{
                 //    configuration.Enrich.FromLogContext()

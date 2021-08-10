@@ -29,6 +29,7 @@ namespace WebAPI.Installers
             services.AddApplication();
             services.AddInfrastructure();
 
+            services.AddMetrics();
             services.AddMemoryCache();
 
             services.AddApiVersioning(x =>
