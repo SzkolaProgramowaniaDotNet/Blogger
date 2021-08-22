@@ -1,4 +1,5 @@
-﻿using Application.Dto;
+﻿using App.Metrics;
+using Application.Dto;
 using Application.Interfaces;
 using Application.Validators;
 using Infrastructure.Identity;
@@ -18,6 +19,7 @@ using WebAPI.Attributes;
 using WebAPI.Cache;
 using WebAPI.Filters;
 using WebAPI.Helpers;
+using WebAPI.Metrics;
 using WebAPI.Wrappers;
 
 namespace WebAPI.Controllers.V1
@@ -32,13 +34,15 @@ namespace WebAPI.Controllers.V1
         private readonly IPostService _postService;
         private readonly IMemoryCache _memoryCache;
         private readonly ILogger _logger;
+        private readonly IMetrics _metrics;
 
 
-        public PostsController(IPostService postService, IMemoryCache memoryCache, ILogger<PostsController> logger)
+        public PostsController(IPostService postService, IMemoryCache memoryCache, ILogger<PostsController> logger, IMetrics metrics)
         {
             _postService = postService;
             _memoryCache = memoryCache;
             _logger = logger;
+            _metrics = metrics;
         }
 
         [SwaggerOperation(Summary = "Retrieves sort fields")]
@@ -110,6 +114,7 @@ namespace WebAPI.Controllers.V1
         public async Task<IActionResult> CreateAsync(CreatePostDto newPost)
         {
             var post = await _postService.AddNewPostAsync(newPost, User.FindFirstValue(ClaimTypes.NameIdentifier));
+            _metrics.Measure.Counter.Increment(MetricsRegistry.CreatedPostsCounter);
             return Created($"api/posts/{post.Id}", new Response<PostDto>(post));
         }
 

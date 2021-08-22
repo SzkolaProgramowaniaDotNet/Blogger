@@ -98,12 +98,12 @@ namespace WebAPI
                 endpoints.Filter().OrderBy().MaxTop(10);
                 endpoints.MapODataRoute("odata", "odata", GetEdmModel());
                 endpoints.MapControllers();
-                endpoints.MapHealthChecks("/health", new HealthCheckOptions()
-                {
-                    Predicate = _ => true,
-                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-                });
-                endpoints.MapHealthChecksUI();
+                //endpoints.MapHealthChecks("/health", new HealthCheckOptions()
+                //{
+                //    Predicate = _ => true,
+                //    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                //});
+                //endpoints.MapHealthChecksUI();
             });
         }
 

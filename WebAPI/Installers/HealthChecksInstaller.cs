@@ -13,14 +13,14 @@ namespace WebAPI.Installers
     {
         public void InstallServices(IServiceCollection services, IConfiguration Configuration)
         {
-            services.AddHealthChecks()
-                .AddDbContextCheck<BloggerContext>("Database");
+            //services.AddHealthChecks()
+            //    .AddDbContextCheck<BloggerContext>("Database");
 
-            services.AddHealthChecks()
-                .AddCheck<ResponseTimeHealthCheck>("Network speed test");
+            //services.AddHealthChecks()
+            //   .AddCheck<ResponseTimeHealthCheck>("Network speed test");
 
-            services.AddHealthChecksUI()
-                .AddInMemoryStorage();
+            //services.AddHealthChecksUI()
+            //  .AddInMemoryStorage();
         }
     }
 }
