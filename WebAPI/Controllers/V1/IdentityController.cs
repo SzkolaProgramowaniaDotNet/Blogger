@@ -1,4 +1,6 @@
-﻿using Infrastructure.Identity;
+﻿using Application.Interfaces;
+using Domain.Enums;
+using Infrastructure.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -24,12 +26,14 @@ namespace WebAPI.Controllers.V1
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManger;
         private readonly IConfiguration _configuration;
+        private readonly IEmailSenderService _emailSenderService;
 
-        public IdentityController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManger, IConfiguration configuration)
+        public IdentityController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManger, IConfiguration configuration, IEmailSenderService emailSenderService)
         {
             _userManager = userManager;
             _roleManger = roleManger;
             _configuration = configuration;
+            _emailSenderService = emailSenderService;
         }
 
         /// <summary>
@@ -74,6 +78,9 @@ namespace WebAPI.Controllers.V1
                 await _roleManger.CreateAsync(new IdentityRole(UserRoles.User));
 
             await _userManager.AddToRoleAsync(user, UserRoles.User);
+
+
+            await _emailSenderService.Send(user.Email, "Registration confirmation", EmailTemplate.WelcomeMessage, user);
 
             return Ok(new Response { Succeeded = true, Message = "User created successfully!" });
         }
